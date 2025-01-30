@@ -6,14 +6,44 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 // Definitions:
-const screenhtml={
-    width:600,
-    height:1024,
+const screen_front={
+    width:800,
+    height:800,
     x:0,
-    y:4.3,
-    z:0.19,
+    y:6.75,
+    z:0.5,
     rotation:{
-        x:5.3721,y:0,z:0
+        x:0,y:0,z:0
+    }
+}
+const screen_bottom={
+    width:800,
+    height:800,
+    x:0,
+    y:6.25,
+    z:0,
+    rotation:{
+        x:Math.PI/2,y:0,z:0
+    }
+}
+const screen_left={
+    width:800,
+    height:800,
+    x:-.5,
+    y:6.75,
+    z:0,
+    rotation:{
+        x:0,y:-Math.PI/2,z:0
+    }
+}
+const screen_right={
+    width:800,
+    height:800,
+    x:.5,
+    y:6.75,
+    z:0,
+    rotation:{
+        x:0,y:Math.PI/2,z:0
     }
 }
 
@@ -72,31 +102,6 @@ document.body.appendChild( rendererwebgl.domElement );
 document.body.appendChild( renderercss3d.domElement );
 
 //Models
-const dracoLoader = new DRACOLoader()
-dracoLoader.setDecoderPath('/draco/')
-
-const gltfLoaders = new GLTFLoader()
-
-gltfLoaders.setDRACOLoader(dracoLoader)
-gltfLoaders.load(
-	'./senhas_02.glb',
-	(gltf) =>
-	{
-		const dispenser = gltf.scene;
-        //
-		gltf.scene.position.y = 0//Move Models
-		gltf.scene.rotation.y = Math.PI*-0.5
-		gltf.scene.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-				child.receiveShadow = true;
-            }
-            // gltf.scene.scale.set(0.5,0.5,0.5);
-        });
-		gltf.scene.scale.set(scale_group,scale_group,scale_group);
-		scene.add(gltf.scene)
-	}
-)
 
 
 //Light
@@ -157,10 +162,14 @@ rendererwebgl.shadowMap.type = true;
 
 
 // Building walls around our stage/set
-const wall_01 = planeBuilder(6, 3, '#ccccdd',false)
-wall_01.position.x = 0;
-wall_01.position.y = 1.5;
-wall_01.position.z = -2.5;
+const wall_01 = planeBuilder(4, 2, '#ccccdd',false)
+wall_01.position.x = -1;
+wall_01.position.y = 1;
+wall_01.position.z = -0.15;
+const textureLoader = new THREE.TextureLoader();
+const fachadaTexture = textureLoader.load('public/fachada.jpg');
+const wallMaterial = new THREE.MeshBasicMaterial({ map: fachadaTexture });
+wall_01.material = wallMaterial;
 scenebg.add(wall_01);
 
 const wall_02 = planeBuilder(6, 3, '#efeeef',false)
@@ -182,32 +191,32 @@ floor.rotation.x=-Math.PI/2;
 floor.position.y=-0.01
 scenebg.add(floor);
 
-const boxtv = boxBuilder(1.1,0.6,0.25,'#343434', false);
-// boxtv.position.set(2,1.5,-2.2);
-boxtv.position.set(2.35,2,-2.2);
-// 
-boxtv.x=Math.PI*0.15;
-boxtv.rotation.y=-Math.PI*.2;
-boxtv.rotation.z=-Math.PI*.015;
-// scenebg.add(boxtv);
+// const boxtv = boxBuilder(1.1,0.6,0.25,'#343434', false);
+// // boxtv.position.set(2,1.5,-2.2);
+// boxtv.position.set(2.35,2,-2.2);
+// // 
+// boxtv.x=Math.PI*0.15;
+// boxtv.rotation.y=-Math.PI*.2;
+// boxtv.rotation.z=-Math.PI*.015;
+// // scenebg.add(boxtv);
 
 
 
-const frametv_01 = planeBuilder (1.04,1.81,'#404040',false)
-frametv_01.position.set(1,1.26,-2.49);
-scenebg.add(frametv_01);
+// const frametv_01 = planeBuilder (1.04,1.81,'#404040',false)
+// frametv_01.position.set(1,1.26,-2.49);
+// scenebg.add(frametv_01);
 
 
-const frametv_02 = planeBuilder (1.94,1.04,'#404040',false)
-frametv_02.position.set(-1,1.6,-2.49);
-scenebg.add(frametv_02);
+// const frametv_02 = planeBuilder (1.94,1.04,'#404040',false)
+// frametv_02.position.set(-1,1.6,-2.49);
+// scenebg.add(frametv_02);
 
-const frametv_03 = planeBuilder (0.98,0.55,'#404040',false)
-frametv_03.position.set(2.3,2,-2.1);
-frametv_03.rotation.x=Math.PI*0.1;
-frametv_03.rotation.y=-Math.PI*.2;
-frametv_03.rotation.z=Math.PI*.05;
-scenebg.add(frametv_03);
+// const frametv_03 = planeBuilder (0.98,0.55,'#404040',false)
+// frametv_03.position.set(2.3,2,-2.1);
+// frametv_03.rotation.x=Math.PI*0.1;
+// frametv_03.rotation.y=-Math.PI*.2;
+// frametv_03.rotation.z=Math.PI*.05;
+// scenebg.add(frametv_03);
 // group_03.position.set(2.3,2,-2.1);
 // group_03.rotation.x=Math.PI*0.1;
 // group_03.rotation.y=-Math.PI*.2;
@@ -215,17 +224,55 @@ scenebg.add(frametv_03);
 
 
 // Creating elements that will be placed in the CSS3D Renderer
-const iframe3d = document.createElement( 'iframe' );
-iframe3d.style.width = `${screenhtml.width}px`;
-iframe3d.style.height = `${screenhtml.height}px`;
+const iframe_front = document.createElement( 'iframe' );
+iframe_front.style.width = `${screen_front.width}px`;
+iframe_front.style.height = `${screen_front.height}px`;
 // iframe.style.height = '3px';
-iframe3d.style.border = '1px solid black';
-iframe3d.style.zIndex = 2;
-iframe3d.style.pointerEvents = 'auto';
+iframe_front.style.border = '1px solid black';
+iframe_front.style.zIndex = 2;
+iframe_front.style.pointerEvents = 'auto';
 // iframe.src = './iframe3dcontent.html';
-iframe3d.src = './menu.html';
-iframe3d.style.backfaceVisibility = 'hidden'
+iframe_front.src = './frente.html';
+iframe_front.style.backfaceVisibility = 'hidden'
 // div3d.appendChild( iframe );
+
+const iframe_bottom = document.createElement( 'iframe' );
+iframe_bottom.style.width = `${screen_front.width}px`;
+iframe_bottom.style.height = `${screen_front.height}px`;
+// iframe.style.height = '3px';
+iframe_bottom.style.border = '1px solid black';
+iframe_bottom.style.zIndex = 2;
+iframe_bottom.style.pointerEvents = 'auto';
+// iframe.src = './iframe3dcontent.html';
+iframe_bottom.src = './fundo.html';
+iframe_bottom.style.backfaceVisibility = 'hidden'
+// div3d.appendChild( iframe );
+
+const iframe_left = document.createElement( 'iframe' );
+iframe_left.style.width = `${screen_front.width}px`;
+iframe_left.style.height = `${screen_front.height}px`;
+// iframe.style.height = '3px';
+iframe_left.style.border = '1px solid black';
+iframe_left.style.zIndex = 2;
+iframe_left.style.pointerEvents = 'auto';
+// iframe.src = './iframe3dcontent.html';
+iframe_left.src = './esq.html';
+iframe_left.style.backfaceVisibility = 'hidden'
+// div3d.appendChild( iframe );
+
+const iframe_right = document.createElement( 'iframe' );
+iframe_right.style.width = `${screen_front.width}px`;
+iframe_right.style.height = `${screen_front.height}px`;
+// iframe.style.height = '3px';
+iframe_right.style.border = '1px solid black';
+iframe_right.style.zIndex = 2;
+iframe_right.style.pointerEvents = 'auto';
+// iframe.src = './iframe3dcontent.html';
+iframe_right.src = './dir.html';
+iframe_right.style.backfaceVisibility = 'hidden'
+// div3d.appendChild( iframe );
+
+
 
 function css3dElementBuilder(type,width,height){
     let cssobject = document.createElement(type);
@@ -236,60 +283,50 @@ function css3dElementBuilder(type,width,height){
     cssobject.style.backfaceVisibility = 'hidden';
     return cssobject;
 }
-const group_MV = new THREE.Group;
-const display_01 = css3dElementBuilder('iframe',720,1360);
-const display_01_3d = new CSS3DObject (display_01)
-
-display_01_3d.scale.set(1/720,1/720);
-// display_01_3d.rotation.x = 0.5;
-
-display_01.src = './montra_V.html'
-group_MV.add(display_01_3d);
-group_MV.position.set(1,1.2,-2.49)
-
-const group_MH = new THREE.Group;
-const display_02 = css3dElementBuilder('iframe', 1360,720);
-display_02.src = './montra_H.html'
-const display_02_3d = new CSS3DObject(display_02);
-display_02_3d.scale.set(1/720,1/720);
-group_MH.add(display_02_3d);
-group_MH.position.set(-1,1.6,-2.49);
-
-const group_CTV = new THREE.Group;
-const display_03 = css3dElementBuilder('iframe', 1366,768);
-display_03.src = './ctv.html'
-const display_03_3d = new CSS3DObject(display_03);
-display_03_3d.scale.set(1/(720*2),1/(720*2));
-group_CTV.add(display_03_3d);
-group_CTV.position.set(2.3,2,-2.1);
-
-group_CTV.rotation.x=Math.PI*0.1;
-group_CTV.rotation.y=2*Math.PI-Math.PI*.2;
-group_CTV.rotation.z=Math.PI*.05;
 
 
-
-scenebg.add(group_CTV);
-scenebg.add(group_MH);
-scenebg.add(group_MV);
 // scene.add(bgscene);
 // bgscene.add(display_01_3d)
 
 
 
 
-const object3d = new CSS3DObject( iframe3d );
+const object_front = new CSS3DObject( iframe_front );
+const object_bottom = new CSS3DObject( iframe_bottom );
+const object_left = new CSS3DObject( iframe_left );
+const object_right = new CSS3DObject( iframe_right );
 
-object3d.scale.set(1/screenhtml.width,1/screenhtml.width)
+object_front.scale.set(1/screen_front.width,1/screen_front.width)
+object_bottom.scale.set(1/screen_front.width,1/screen_front.width)
+object_left.scale.set(1/screen_front.width,1/screen_front.width)
+object_right.scale.set(1/screen_front.width,1/screen_front.width)
 
-object3d.position.set( screenhtml.x, screenhtml.y, screenhtml.z );
-object3d.rotateX(screenhtml.rotation.x)
-object3d.rotateY(screenhtml.rotation.y)
-object3d.rotateZ(screenhtml.rotation.z)
+object_front.position.set( screen_front.x, screen_front.y, screen_front.z );
+object_front.rotateX(screen_front.rotation.x)
+object_front.rotateY(screen_front.rotation.y)
+object_front.rotateZ(screen_front.rotation.z)
+
+object_bottom.position.set( screen_bottom.x, screen_bottom.y, screen_bottom.z );
+object_bottom.rotateX(screen_bottom.rotation.x)
+object_bottom.rotateY(screen_bottom.rotation.y)
+object_bottom.rotateZ(screen_bottom.rotation.z)
+
+object_left.position.set( screen_left.x, screen_left.y, screen_left.z );
+object_left.rotateX(screen_left.rotation.x)
+object_left.rotateY(screen_left.rotation.y)
+object_left.rotateZ(screen_left.rotation.z)
+
+object_right.position.set( screen_right.x, screen_right.y, screen_right.z );
+object_right.rotateX(screen_right.rotation.x)
+object_right.rotateY(screen_right.rotation.y)
+object_right.rotateZ(screen_right.rotation.z)
 
 
 
-group.add(object3d)
+group.add(object_front)
+group.add(object_bottom)
+group.add(object_left)
+group.add(object_right)
 
 scene.add(group)
 
@@ -305,12 +342,12 @@ scene.add(camera);
 scenebg.add(camera);
 
 let camera_initial_position={
-    x: object3d.position.x+2,
-    y: object3d.position.y+1.3,
-    z: object3d.position.z+2
+    x: object_front.position.x+3,
+    y: object_front.position.y-2,
+    z: object_front.position.z+5
 };
 camera.position.set(camera_initial_position.x*scale_group,camera_initial_position.y*scale_group, camera_initial_position.z*scale_group);
-let camerafocus = new THREE.Vector3(object3d.position.x*scale_group,object3d.position.y*scale_group,object3d.position.z*scale_group);
+let camerafocus = new THREE.Vector3(object_front.position.x*scale_group,object_front.position.y*scale_group,object_front.position.z*scale_group-0.2);
 // camerafocus = (new THREE.Vector3(2.35,2,-2.2))
 
 // camera.lookAt(camerafocus);
@@ -323,8 +360,8 @@ const controls = new OrbitControls(camera, renderercss3d.domElement)
 // const controls = new ArcballControls(camera, renderercss3d.domElement)
 controls.movementSpeed = 0.1;
 // console.log(screenhtml.rotation.x);
-const initcontrols={minpolar:-Math.PI*0.99,
-    maxpolar: Math.PI/2,
+const initcontrols={minpolar:Math.PI/2,
+    maxpolar: Math.PI,
     minazimuth: -Math.PI/2.1,
     maxazimuth: Math.PI/2.1,
     maxdist: 2.3
@@ -360,11 +397,11 @@ function animate() {
 
     controls.update();
 
-        if(camera.position.z<=(object3d.position.z*scale_group-zposB(object3d.position.y,camera.position.y,screenhtml.rotation.x,scale_group))){
+        if(camera.position.z<=(object_front.position.z*scale_group-zposB(object_front.position.y,camera.position.y,screen_front.rotation.x,scale_group))){
             
-            iframe3d.style.visibility='hidden';
+            iframe_front.style.visibility='hidden';
         }else{
-            iframe3d.style.visibility='visible';
+            iframe_front.style.visibility='visible';
         }
 }
 animate();
@@ -382,9 +419,9 @@ function rotateMesh (str) {
             z:camera_initial_position.z*scale_group,
             duration:.6
         });        
-        camerafocus.x = object3d.position.x*scale_group;
-        camerafocus.y = object3d.position.y*scale_group;
-        camerafocus.z = object3d.position.z*scale_group;
+        camerafocus.x = object_front.position.x*scale_group;
+        camerafocus.y = object_front.position.y*scale_group;
+        camerafocus.z = object_front.position.z*scale_group;
         gsap.to(controls.target,{
             x:camerafocus.x,
             y:camerafocus.y, 
@@ -399,13 +436,13 @@ function rotateMesh (str) {
     }
     if (str === '2') {  //front
         gsap.to(camera.position, {
-            x: object3d.position.x*scale_group, 
-            y: object3d.position.y*scale_group, 
-            z:object3d.position.z+3*scale_group, 
+            x: object_front.position.x*scale_group, 
+            y: object_front.position.y*scale_group, 
+            z:object_front.position.z+3*scale_group, 
             duration: 1});
-            camerafocus.x = object3d.position.x*scale_group;
-        camerafocus.y = object3d.position.y*scale_group;
-        camerafocus.z = object3d.position.z*scale_group;
+            camerafocus.x = object_front.position.x*scale_group;
+        camerafocus.y = object_front.position.y*scale_group;
+        camerafocus.z = object_front.position.z*scale_group;
         gsap.to(controls.target,{
             x:camerafocus.x,
             y:camerafocus.y, 
@@ -420,13 +457,13 @@ function rotateMesh (str) {
     }
     if (str === 'top') { 
         gsap.to(camera.position, {
-            x: object3d.position.x*scale_group+0.1, 
-            y: object3d.position.y*scale_group+1, 
-            z:object3d.position.z*scale_group+0.1, 
+            x: object_front.position.x*scale_group+0.1, 
+            y: object_front.position.y*scale_group+1, 
+            z:object_front.position.z*scale_group+0.1, 
             duration: 1});
-            camerafocus.x = object3d.position.x*scale_group;
-        camerafocus.y = object3d.position.y*scale_group;
-        camerafocus.z = object3d.position.z*scale_group;
+            camerafocus.x = object_front.position.x*scale_group;
+        camerafocus.y = object_front.position.y*scale_group;
+        camerafocus.z = object_front.position.z*scale_group;
         gsap.to(controls.target,{
             x:camerafocus.x,
             y:camerafocus.y, 
@@ -441,13 +478,13 @@ function rotateMesh (str) {
     }
     if (str === '0') { 
         gsap.to(camera.position, {
-            x: object3d.position.x*scale_group+1, 
-            y: object3d.position.y*scale_group, 
-            z:object3d.position.z*scale_group+0.3, 
+            x: object_front.position.x*scale_group+1, 
+            y: object_front.position.y*scale_group, 
+            z:object_front.position.z*scale_group+0.3, 
             duration: 1});
-            camerafocus.x = object3d.position.x*scale_group;
-        camerafocus.y = object3d.position.y*scale_group;
-        camerafocus.z = object3d.position.z*scale_group;
+            camerafocus.x = object_front.position.x*scale_group;
+        camerafocus.y = object_front.position.y*scale_group;
+        camerafocus.z = object_front.position.z*scale_group;
         gsap.to(controls.target,{
             x:camerafocus.x,
             y:camerafocus.y, 
@@ -462,16 +499,16 @@ function rotateMesh (str) {
     }
     if (str === '1') {  
     
-        let fc = positionsLookAt(object3d.position,screenhtml.rotation,scale_group,0.4);
+        let fc = positionsLookAt(object_front.position,screen_front.rotation,scale_group,0.4);
         gsap.to(
             camera.position, {
                 x: fc.x,
                 y: fc.y, 
                 z: fc.z,
                 duration: 1});
-        camerafocus.x = object3d.position.x*scale_group;
-        camerafocus.y = object3d.position.y*scale_group;
-        camerafocus.z = object3d.position.z*scale_group;
+        camerafocus.x = object_front.position.x*scale_group;
+        camerafocus.y = object_front.position.y*scale_group;
+        camerafocus.z = object_front.position.z*scale_group;
         gsap.to(controls.target,{
             x:camerafocus.x,
             y:camerafocus.y, 
@@ -587,49 +624,6 @@ function zposB(yp,ycam,ang,scale){
     }
 }
 
-// let popupshow = '';
-// function popUpDescription(){
-//     let popupdiv = document.createElement('div');
-//     popupdiv.className = 'popupdiv';
-//     if(popupshow==true){
-//         popupdiv.remove();
-//         document.querySelector('#info').style.backgroundColor = '#fff';
-//     }
-//     let popupdivint = document.createElement('p');
-//     popupdivint.className = 'popupdivint';
-//     let popupbtn = document.createElement('button')
-//     popupbtn.className = 'popupbtn';
-//     popupbtn.innerHTML = 'X';
-//     popupbtn.addEventListener('click', event => {
-//         popupdiv.remove();
-//         popupshow=false;
-//         document.querySelector('#info').style.backgroundColor = '#fff';
-//     })
-//     let popuptitle = document.createElement('h2');
-//     popuptitle.className = 'popuptitle';
-//     popuptitle.innerHTML = `Dispensador senhas XPTO`
-//     let popupparagraph = document.createElement('p');
-//     popupparagraph.className = 'popupparagraph';
-//     popupparagraph.innerHTML = 
-//         `<ul>
-//             <li>Ecrã touch 600x1024</li>
-//             <li>Impressora térmica</li>
-//             <li>Sistema Linux</li>
-//             <li>Interface web (html5)</li>
-//             <li>Personalizável com marca do cliente</li>
-//         </ul>`
-//     popupdiv.appendChild(popupbtn);
-//     popupdivint.appendChild(popuptitle);
-//     popupdivint.appendChild(popupparagraph);
-//     popupdiv.appendChild(popupdivint);
-//     let docbody = document.querySelector('#container');
-//     if(!popupshow){
-//         docbody.appendChild(popupdiv);
-//         document.querySelector('#info').style.backgroundColor = 'hotpink';
-//         popupshow=true;
-//     }
-// }
-
 function positionsLookAt(targetpos,targetrot,scale,dist){
     let rx = targetpos.x*scale;
     let ry = targetpos.y*scale;
@@ -663,88 +657,3 @@ function positionsLookAt(targetpos,targetrot,scale,dist){
 function posval(num){
     return(Math.sqrt(num**2));
 }
-
-document.querySelector('.nav').addEventListener('click', event => {
-    if (!event.target.classList.contains('btn')) return;
-    rotateMesh(event.target.getAttribute('data-value')); 
-})
-
-// document.querySelector('#info').addEventListener('click', () => {
-//     if(popupshow==true){
-//         document.querySelector('.popupdiv').remove();
-//         popupshow=false;
-//         document.querySelector('#info').style.backgroundColor = '#fff';
-//     }else{
-//         popUpDescription();
-//     }
-// })
-
-
-
-const textos_popup = [
-{
-    title: "Branding",
-    content:
-    "<p class='dialog-text'>Personalizável com marca do cliente nas laterais e topo do equipmaneto</p>"
-},
-{
-    title: "Menu",
-    content:
-    "<p class='dialog-text'>Menu HTML. Escolha uma opção para simular uma chamada de senha.</p>"
-},
-{
-    title: "Dispensador de senhas",
-    content:
-    "<ul class='dialog-list'><li>Ecrã touch 600x1024</li><li>Impressora térmica</li><li>Sistema Linux</li><li>Interface web (HTML5)</li><li>Personalizável com marca do cliente</li></ul>"
-},
-{
-    title: "Montra Digital horizontal",
-    content:
-    "<p class='dialog-text'>Montra Digital, no formato Horizontal, com playlist de Campanhas</p>"
-},
-{
-    title: "Montra Digital vertical",
-    content:
-    "<p class='dialog-text'>Montra Digital, no formato Vertical, com playlist de Campanhas</p>"
-},
-{
-    title: "TV Corporativa",
-    content:
-    "<p class='dialog-text'>TV Corporativa com Gestão de Atendimento e playlist de Campanhas e Conteúdos  Institucionais</p>"
-}
-];
-
-
-const dialog = document.querySelector("dialog .content");
-
-function showModalText(str) {
-    dialog.innerHTML = `
-    <h2 class="dialog-title">${textos_popup[str].title}</h2>
-    ${textos_popup[str].content}
-`;    
-}
-
-showModalText(0);
-
-// Menu
-const modal =  document.querySelector("dialog");
-const menu = document.querySelector('.menu');
-menu.addEventListener('click', event => {
-    modal.setAttribute('open', '');
-    showModalText(event.target.getAttribute('data-text'));
-    rotateMesh(event.target.getAttribute('data-text'));
-})
-
-// Menu toggle
-const toggle = document.querySelector('.menu-toggle');
-toggle.addEventListener('click', event => {
-    event.currentTarget.closest('.nav').classList.toggle('active');
-})
-
-
-// window.onload=popUpDescription();
-
-
-// CONSOLE LOGS:
-// console.log('sizes.width: ')
-// console.log(sizes.width)
