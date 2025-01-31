@@ -5,6 +5,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "gltfjsx": "^6.5.3",
     "gsap": "^3.12.4",
     "three": "^0.160.0"
   },
