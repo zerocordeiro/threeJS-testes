@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yellow Background Page</title>
+    <style>
+        body {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branding Front</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            /* background-image: url('./CA_MD0347_V1_H-CA-Seguros-Inquerito-Sinistrados.gif'); */
+            background-repeat: no-repeat;
+            background-color: #f3c911;
+            /* background-position:center; */
+            background-size: cover;
+            overflow:hidden;
+            padding:0;
+            margin:0;
+        }
+        video{
+            /* position:absolute; */
+            margin:0;
+            height: 100vh;
+            width: 1025vw;
+            /* transform: translateY(0vh) translateX(0vw); */
+        }
+        h1{
+            color: #1E0453;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            opacity:0;
+        }
+    </style>
+</head>
+<body>
+    <!-- <video autoplay muted loop id="myVideo">
+        <source src="./branding1.mp4" type="video/mp4">
+    </video> -->
+    <h1>Damos valor ao futuro</h1>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                const heading = document.querySelector("h1");
+                heading.style.transition = "opacity 300ms";
+                heading.style.opacity = "1";
+            }, 4000);
+        
+        });
+        const logo = document.createElement("img");
+        logo.src = "./logo_montepio_bco.svg";
+        logo.style.position = "absolute";
+        logo.style.width = "50%";
+        logo.style.top = "50%";
+        logo.style.left = "-5%";
+        logo.style.transform = "translateY(-50%) translateX(150vw)";
+        logo.style.transition = "transform 2.5s";
+        document.body.appendChild(logo);
+
+        setTimeout(function() {
+            logo.style.transform = "translateY(-50%) translateX(0)";
+        }, 100);
+    </script>
+</body>
+</html>

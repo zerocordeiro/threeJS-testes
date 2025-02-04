@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yellow Background Page</title>
+    <style>
+        body {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branding Right</title>
+    <style>
+        body{
+            /* background-image: url('./CA_MD0347_V1_H-CA-Seguros-Inquerito-Sinistrados.gif'); */
+            background-repeat: no-repeat;
+            background-color: #f3c911;
+            /* background-position:center; */
+            background-size: cover;
+            overflow:hidden;
+            padding:0;
+            margin:0;
+        }
+        video{
+            /* position:absolute; */
+            margin:0;
+            height: 200vh;
+            width: 1225vw;
+            transform: translateY(-100vh) translateX(1125vw);
+        }
+    </style>
+</head>
+<body>
+    <!-- <video autoplay muted loop id="myVideo">
+        <source src="./Cubo_Full.mp4" type="video/mp4">
+    </video> -->
+    <script>
+
+        const logo = document.createElement("img");
+        logo.src = "./logo_montepio_bco.svg";
+        logo.style.position = "absolute";
+        logo.style.height = "350%";
+        logo.style.top = "50%";
+        logo.style.left = "-40%";
+        logo.style.transform = "translateY(-50%) translateX(150vw)";
+        logo.style.transition = "transform 2.5s, opacity 1s";
+        logo.style.opacity = "1";
+        document.body.appendChild(logo);
+
+        function animateLogo() {
+            logo.style.transform = "translateY(-50%) translateX(0)";
+            setTimeout(function() {
+            logo.style.opacity = "0";
+
+            setTimeout(function() {
+                logo.style.transform = "translateY(-50%) translateX(150vw)";
+                logo.style.opacity = "1";
+                setTimeout(animateLogo, 100); // Restart the animation
+            }, 1000); // Wait for the fade out to complete
+            }, 5000); // Wait for 4 seconds before fading out
+        }
+
+        setTimeout(animateLogo, 100);
+
+    </script>
+</body>
+</html>

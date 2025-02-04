@@ -6,44 +6,71 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 // Definitions:
-const screen_front={
-    width:800,
-    height:800,
-    x:0,
-    y:6.75,
-    z:0.5,
-    rotation:{
-        x:0,y:0,z:0
+const screen_front = {
+    width: 1000,
+    height: 1000,
+    x: 3.49,
+    y: 2.44,
+    z: 0.49,
+    // y: 3.44,
+    // z: -0.51,
+    rotation: {
+        x: 0, y: 0, z: 0
     }
 }
-const screen_bottom={
-    width:800,
-    height:800,
-    x:0,
-    y:6.25,
-    z:0,
-    rotation:{
-        x:Math.PI/2,y:0,z:0
+
+const screen_left = {
+    width: 1000,
+    height: 1000,
+    x: 2.99,
+    y: 2.44,
+    z: -0.01,
+    // y: 3.44,
+    // z: -1.01,
+    rotation: {
+        x: 0, y: -Math.PI / 2, z: 0
     }
 }
-const screen_left={
-    width:800,
-    height:800,
-    x:-.5,
-    y:6.75,
-    z:0,
-    rotation:{
-        x:0,y:-Math.PI/2,z:0
+const screen_right = {
+    width: 1000,
+    height: 1000,
+    x: 3.99,
+    y: 2.44,
+    z: -0.01,
+    // y: 3.44,
+    // z: -1.01,
+    rotation: {
+        x: 0, y: Math.PI / 2, z: 0
     }
 }
-const screen_right={
-    width:800,
-    height:800,
-    x:.5,
-    y:6.75,
-    z:0,
-    rotation:{
-        x:0,y:Math.PI/2,z:0
+const screen_bottom = {
+    width: 800,
+    height: 800,
+    x: 3.49,
+    y: 1.94,
+    z: -0.01,
+    rotation: {
+        x: Math.PI / 2, y: 0, z: 0
+    }
+}
+const brandingFront = {
+    width: 1025,
+    height: 100,
+    x: -1.135,
+    y: 2.44,
+    z: -0.51,
+    rotation: {
+        x: 0, y: 0, z: 0
+    }
+}
+const brandingRight = {
+    width: 200,
+    height: 100,
+    x: 3.99,
+    y: 2.44,
+    z: -1.51,
+    rotation: {
+        x: 0, y: Math.PI / 2, z: 0
     }
 }
 
@@ -68,6 +95,7 @@ scenebg.add(grid);
 
 // Creating a group so it's easier to move various elements around if necessary
 const group = new THREE.Group
+const groupbranding = new THREE.Group
 
 // WebGL Renderer
 const rendererwebgl = new THREE.WebGLRenderer({canvas:canvas}); // standard renderer for 3JS
@@ -107,13 +135,17 @@ document.body.appendChild( renderercss3d.domElement );
 //Light
 
  //Ambient light
-const light = new THREE.AmbientLight( 0x404040,10 ); // soft white light
+const light = new THREE.AmbientLight( 0x404040,20 ); // soft white light
 light.castShadow = false;
+const lightBG = new THREE.AmbientLight( 0x404040,20 ); // soft white light
+lightBG.castShadow = false;
 
 scene.add( light );
+scenebg.add( lightBG )
+
 
 //Directional Light
-const directionalLight = new THREE.DirectionalLight(0x404040,50)
+const directionalLight = new THREE.DirectionalLight(0x404040,30)
 directionalLight.position.y = 3;
 directionalLight.position.z = -1.5;
 directionalLight.position.x = 2;
@@ -129,37 +161,65 @@ directionalLight.shadow.camera.far = 100;
 directionalLight.shadow.bias = -0.01;
 scene.add(directionalLight);
 
+const directionalLightBG = new THREE.DirectionalLight(0x404040,30)
+directionalLightBG.position.y = 3;
+directionalLightBG.position.z = -1.5;
+directionalLightBG.position.x = 2;
+directionalLightBG.castShadow = true
+directionalLightBG.shadow.mapSize.width = 1024;
+directionalLightBG.shadow.mapSize.height = 1024;
+directionalLightBG.shadow.camera.left = -5;
+directionalLightBG.shadow.camera.right = 5;
+directionalLightBG.shadow.camera.top = 5;
+directionalLightBG.shadow.camera.bottom = -10;
+directionalLightBG.shadow.camera.near = 0.1;
+directionalLightBG.shadow.camera.far = 100;
+directionalLightBG.shadow.bias = -0.01;
+scenebg.add(directionalLightBG)
+
+
 //Directional Light2
-const directionalLight2 = new THREE.DirectionalLight(0x404040, 20)
-directionalLight2.position.y = 3;
-directionalLight2.position.z = 1.5;
-directionalLight2.position.x = -2;
-directionalLight2.castShadow = true
-directionalLight2.shadow.mapSize.width = 1024;
-directionalLight2.shadow.mapSize.height = 1024;
-directionalLight2.shadow.camera.left = -5;
-directionalLight2.shadow.camera.right = 5;
-directionalLight2.shadow.camera.top = 5;
-directionalLight2.shadow.camera.bottom = -10;
-directionalLight2.shadow.camera.near = 0.1;
-directionalLight2.shadow.camera.far = 100;
-directionalLight2.shadow.bias = -0.001;
-scene.add(directionalLight2);
+function directionalLight2(){
+    const directionalLight2 = new THREE.DirectionalLight(0x404040, 20)
+    directionalLight2.position.y = 3;
+    directionalLight2.position.z = 1.5;
+    directionalLight2.position.x = -2;
+    directionalLight2.castShadow = true
+    directionalLight2.shadow.mapSize.width = 1024;
+    directionalLight2.shadow.mapSize.height = 1024;
+    directionalLight2.shadow.camera.left = -5;
+    directionalLight2.shadow.camera.right = 5;
+    directionalLight2.shadow.camera.top = 5;
+    directionalLight2.shadow.camera.bottom = -10;
+    directionalLight2.shadow.camera.near = 0.1;
+    directionalLight2.shadow.camera.far = 100;
+    directionalLight2.shadow.bias = -0.001;
+    return(directionalLight2);
+}
+
+const dirL21 = new directionalLight2();
+const dirL22 = new directionalLight2();   
+scene.add(dirL21);
+scenebg.add(dirL22);
+
 
 
 // Target
 directionalLight.target.position.set(0, 1, 0)
-directionalLight2.target.position.set(directionalLight.target.position)
+dirL21.target.position.set(directionalLight.target.position)
+dirL21.target.position.set(directionalLight.target.position)
 directionalLight.target.updateWorldMatrix()
-
-scene.add(directionalLight)
-scene.add(directionalLight2)
 
 
 rendererwebgl.shadowMap.enabled = true;
 rendererwebgl.shadowMap.type = true;
 
-
+function planeBuilder(width=1,height=1,color='white',wframe=false){
+    let newplane = new THREE.PlaneGeometry(width,height);
+    let planematerial = new THREE.MeshBasicMaterial({color:color, wireframe:wframe})
+    let builtplane = new THREE.Mesh(newplane, planematerial);
+    return(builtplane);
+}
 
 // Building walls around our stage/set
 const wall_01 = planeBuilder(4, 2, '#ccccdd',false)
@@ -167,10 +227,10 @@ wall_01.position.x = -1;
 wall_01.position.y = 1;
 wall_01.position.z = -0.15;
 const textureLoader = new THREE.TextureLoader();
-const fachadaTexture = textureLoader.load('public/fachada.jpg');
+const fachadaTexture = textureLoader.load('./fachada.jpg');
 const wallMaterial = new THREE.MeshBasicMaterial({ map: fachadaTexture });
 wall_01.material = wallMaterial;
-scenebg.add(wall_01);
+// scenebg.add(wall_01);
 
 const wall_02 = planeBuilder(6, 3, '#efeeef',false)
 wall_02.position.x = -3
@@ -180,16 +240,26 @@ wall_02.rotation.y = Math.PI/2;
 scenebg.add(wall_02);
 
 const wall_03 = planeBuilder(6, 3, '#efeeee',false)
-wall_03.position.x = 3
+wall_03.position.x = 4
 wall_03.position.y = 1.5;
 wall_03.position.z = 0;
 wall_03.rotation.y = -Math.PI/2;
 scenebg.add(wall_03);
 
-const floor = planeBuilder(6,6, '#dddddd', false)
+const floor = planeBuilder(6,6, '#ddd', false)
 floor.rotation.x=-Math.PI/2;
-floor.position.y=-0.01
+floor.position.y=0.0;
 scenebg.add(floor);
+
+const wall_04 = planeBuilder(3, 6, '#ffffff', false);
+wall_04.position.x = 2.5;
+wall_04.position.y = 3;
+wall_04.position.z = -1;
+const vizinhoTexture = textureLoader.load('./vizinho.png');
+const wallMaterialVizinho = new THREE.MeshBasicMaterial({ map: vizinhoTexture });
+wall_04.material = wallMaterialVizinho;
+scenebg.add(wall_04);
+
 
 // const boxtv = boxBuilder(1.1,0.6,0.25,'#343434', false);
 // // boxtv.position.set(2,1.5,-2.2);
@@ -221,6 +291,28 @@ scenebg.add(floor);
 // group_03.rotation.x=Math.PI*0.1;
 // group_03.rotation.y=-Math.PI*.2;
 // group_03.rotation.z=Math.PI*.05;
+let predio;
+let marquise
+async function everything(){
+async function load3D(){
+    predio =  await new GLTFLoader().loadAsync('./predio.glb');
+    predio.scene.scale.set(0.25,0.25,0.25);
+    predio.scene.translateX(-0.63);
+    predio.scene.translateY(0.06);
+    predio.scene.translateZ(-0.38);
+
+    marquise =  await new GLTFLoader().loadAsync('./marquise.glb');
+    marquise.scene.scale.set(0.25,0.25,0.25);
+    marquise.scene.translateX(-0.63);
+    marquise.scene.translateY(0.06);
+    marquise.scene.translateZ(-0.38);
+} 
+
+await load3D();
+
+
+scenebg.add(predio.scene)
+scene.add(marquise.scene)
 
 
 // Creating elements that will be placed in the CSS3D Renderer
@@ -228,7 +320,7 @@ const iframe_front = document.createElement( 'iframe' );
 iframe_front.style.width = `${screen_front.width}px`;
 iframe_front.style.height = `${screen_front.height}px`;
 // iframe.style.height = '3px';
-iframe_front.style.border = '1px solid black';
+iframe_front.style.border = '0px solid black';
 iframe_front.style.zIndex = 2;
 iframe_front.style.pointerEvents = 'auto';
 // iframe.src = './iframe3dcontent.html';
@@ -237,22 +329,21 @@ iframe_front.style.backfaceVisibility = 'hidden'
 // div3d.appendChild( iframe );
 
 const iframe_bottom = document.createElement( 'iframe' );
-iframe_bottom.style.width = `${screen_front.width}px`;
+{
+    iframe_bottom.style.width = `${screen_front.width}px`;
 iframe_bottom.style.height = `${screen_front.height}px`;
-// iframe.style.height = '3px';
 iframe_bottom.style.border = '1px solid black';
 iframe_bottom.style.zIndex = 2;
 iframe_bottom.style.pointerEvents = 'auto';
-// iframe.src = './iframe3dcontent.html';
 iframe_bottom.src = './fundo.html';
 iframe_bottom.style.backfaceVisibility = 'hidden'
-// div3d.appendChild( iframe );
+}
 
 const iframe_left = document.createElement( 'iframe' );
 iframe_left.style.width = `${screen_front.width}px`;
 iframe_left.style.height = `${screen_front.height}px`;
 // iframe.style.height = '3px';
-iframe_left.style.border = '1px solid black';
+iframe_left.style.border = '0px solid black';
 iframe_left.style.zIndex = 2;
 iframe_left.style.pointerEvents = 'auto';
 // iframe.src = './iframe3dcontent.html';
@@ -261,17 +352,43 @@ iframe_left.style.backfaceVisibility = 'hidden'
 // div3d.appendChild( iframe );
 
 const iframe_right = document.createElement( 'iframe' );
-iframe_right.style.width = `${screen_front.width}px`;
+{iframe_right.style.width = `${screen_front.width}px`;
 iframe_right.style.height = `${screen_front.height}px`;
 // iframe.style.height = '3px';
-iframe_right.style.border = '1px solid black';
+iframe_right.style.border = '0px solid black';
 iframe_right.style.zIndex = 2;
 iframe_right.style.pointerEvents = 'auto';
 // iframe.src = './iframe3dcontent.html';
 iframe_right.src = './dir.html';
 iframe_right.style.backfaceVisibility = 'hidden'
 // div3d.appendChild( iframe );
+}
 
+const iframeBrandingFront = document.createElement( 'iframe' );
+{iframeBrandingFront.style.width = `${brandingFront.width}px`;
+iframeBrandingFront.style.height = `${brandingFront.height}px`;
+// iframe.style.height = '3px';
+iframeBrandingFront.style.border = '0px solid black';
+iframeBrandingFront.style.zIndex = 2;
+iframeBrandingFront.style.pointerEvents = 'auto';
+// iframe.src = './iframe3dcontent.html';
+iframeBrandingFront.src = './brandingfront.html';
+iframeBrandingFront.style.backfaceVisibility = 'hidden'
+// div3d.appendChild( iframe );
+}
+
+const iframeBrandingRight = document.createElement( 'iframe' );
+{iframeBrandingRight.style.width = `${brandingRight.width}px`;
+iframeBrandingRight.style.height = `${brandingRight.height}px`;
+// iframe.style.height = '3px';
+iframeBrandingRight.style.border = '0px solid black';
+iframeBrandingRight.style.zIndex = 2;
+iframeBrandingRight.style.pointerEvents = 'auto';
+// iframe.src = './iframe3dcontent.html';
+iframeBrandingRight.src = './brandingright.html';
+iframeBrandingRight.style.backfaceVisibility = 'hidden';
+// div3d.appendChild( iframe );
+}
 
 
 function css3dElementBuilder(type,width,height){
@@ -295,11 +412,15 @@ const object_front = new CSS3DObject( iframe_front );
 const object_bottom = new CSS3DObject( iframe_bottom );
 const object_left = new CSS3DObject( iframe_left );
 const object_right = new CSS3DObject( iframe_right );
+const build_front = new CSS3DObject( iframeBrandingFront );
+const build_right = new CSS3DObject( iframeBrandingRight );
 
 object_front.scale.set(1/screen_front.width,1/screen_front.width)
 object_bottom.scale.set(1/screen_front.width,1/screen_front.width)
 object_left.scale.set(1/screen_front.width,1/screen_front.width)
 object_right.scale.set(1/screen_front.width,1/screen_front.width)
+build_front.scale.set(10.25/brandingFront.width,1/brandingFront.height)
+build_right.scale.set(2/brandingRight.width,1/brandingRight.height)
 
 object_front.position.set( screen_front.x, screen_front.y, screen_front.z );
 object_front.rotateX(screen_front.rotation.x)
@@ -321,33 +442,47 @@ object_right.rotateX(screen_right.rotation.x)
 object_right.rotateY(screen_right.rotation.y)
 object_right.rotateZ(screen_right.rotation.z)
 
+build_front.position.set( brandingFront.x, brandingFront.y, brandingFront.z );
+build_front.rotateX(brandingFront.rotation.x)
+build_front.rotateY(brandingFront.rotation.y)   
+build_front.rotateZ(brandingFront.rotation.z)
 
+build_right.position.set( brandingRight.x, brandingRight.y, brandingRight.z );
+build_right.rotateX(brandingRight.rotation.x)   
+build_right.rotateY(brandingRight.rotation.y)   
+build_right.rotateZ(brandingRight.rotation.z)   
 
 group.add(object_front)
 group.add(object_bottom)
 group.add(object_left)
 group.add(object_right)
 
+groupbranding.add(build_front)
+groupbranding.add(build_right)
+
+// Define em qual das "camadas" fica o grupo onde está o cubo
 scene.add(group)
+scene.add(groupbranding)
 
 group.scale.set(scale_group, scale_group,scale_group);
+groupbranding.scale.set(scale_group, scale_group,scale_group);
 
 //CAMERA
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000); // the camera is where the "viewer" is. Has the parameters (vertical angle, aspect ratio, min distance for viewing something, maximum distance for viewing something - objects farther away will not be displayed)
 // const camerabg = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000);
 
 
-
-scene.add(camera);
 scenebg.add(camera);
+scene.add(camera);
+
 
 let camera_initial_position={
-    x: object_front.position.x+3,
-    y: object_front.position.y-2,
-    z: object_front.position.z+5
+    x: object_front.position.x+2,
+    y: object_front.position.y-1.3,
+    z: object_front.position.z+2.2
 };
 camera.position.set(camera_initial_position.x*scale_group,camera_initial_position.y*scale_group, camera_initial_position.z*scale_group);
-let camerafocus = new THREE.Vector3(object_front.position.x*scale_group,object_front.position.y*scale_group,object_front.position.z*scale_group-0.2);
+let camerafocus = new THREE.Vector3(object_front.position.x*scale_group,object_front.position.y*scale_group-0.15,object_front.position.z*scale_group-0.2);
 // camerafocus = (new THREE.Vector3(2.35,2,-2.2))
 
 // camera.lookAt(camerafocus);
@@ -361,16 +496,18 @@ const controls = new OrbitControls(camera, renderercss3d.domElement)
 controls.movementSpeed = 0.1;
 // console.log(screenhtml.rotation.x);
 const initcontrols={minpolar:Math.PI/2,
-    maxpolar: Math.PI,
+    maxpolar: Math.PI/1.5,
     minazimuth: -Math.PI/2.1,
     maxazimuth: Math.PI/2.1,
-    maxdist: 2.3
+    maxdist: 2.3,
+    mindist: 0.5
 }
 controls.minPolarAngle = initcontrols.minpolar;
 controls.maxPolarAngle = initcontrols.maxpolar;
 controls.minAzimuthAngle = initcontrols.minazimuth;
 controls.maxAzimuthAngle = initcontrols.maxazimuth;
 controls.maxDistance = initcontrols.maxdist;
+controls.minDistance = initcontrols.mindist;
 
 controls.target.set(camerafocus.x,camerafocus.y,camerafocus.z);
 console.log('setcontrols target');
@@ -382,10 +519,12 @@ function animate() {
     // camera.lookAt(camerafocus);
 	requestAnimationFrame( animate );
     
-    rendererwebglbg.render( scenebg, camera );
-    renderercss3dbg.render( scenebg, camera);
-    rendererwebgl.render( scene, camera );
     renderercss3d.render( scene, camera );
+    rendererwebgl.render( scene, camera );
+    renderercss3dbg.render( scenebg, camera);
+    rendererwebglbg.render( scenebg, camera );
+
+
     
     // forcing camera position
     // if(camera.position.y<object3d.position.y*scale_group){
@@ -397,11 +536,18 @@ function animate() {
 
     controls.update();
 
-        if(camera.position.z<=(object_front.position.z*scale_group-zposB(object_front.position.y,camera.position.y,screen_front.rotation.x,scale_group))){
+
+        if(camera.position.x<=(build_right.position.x*scale_group)){
             
-            iframe_front.style.visibility='hidden';
+            iframeBrandingRight.style.visibility='hidden';
         }else{
-            iframe_front.style.visibility='visible';
+            iframeBrandingRight.style.visibility='visible';
+        }
+        if(camera.position.z<=(build_front.position.z*scale_group)){
+            
+            iframeBrandingFront.style.visibility='hidden';
+        }else{
+            iframeBrandingFront.style.visibility='visible';
         }
 }
 animate();
@@ -611,12 +757,7 @@ function boxBuilder(width=1,height=1,depth=1,color='white',wframe=false){
     let builtbox = new THREE.Mesh(newbox, material);
     return(builtbox);
 }
-function planeBuilder(width=1,height=1,color='white',wframe=false){
-    let newplane = new THREE.PlaneGeometry(width,height);
-    let planematerial = new THREE.MeshBasicMaterial({color:color, wireframe:wframe})
-    let builtplane = new THREE.Mesh(newplane, planematerial);
-    return(builtplane);
-}
+
 
 function zposB(yp,ycam,ang,scale){
     {
@@ -656,4 +797,5 @@ function positionsLookAt(targetpos,targetrot,scale,dist){
 }
 function posval(num){
     return(Math.sqrt(num**2));
-}
+}}
+everything();
