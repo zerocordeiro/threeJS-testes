@@ -40,8 +40,12 @@
         }
         h1{
             color: #1E0453;
+            display: inline;
+            position:relative;
+            justify-content: left;
+            align-items: center;
             display: flex;
-            justify-content: center;
+            /* justify-content: center; */
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -53,20 +57,20 @@
     <!-- <video autoplay muted loop id="myVideo">
         <source src="./branding1.mp4" type="video/mp4">
     </video> -->
-    <h1>Damos valor ao futuro</h1>
+    <img src="./logo_montepio_bco.svg" alt="" style="width: 20%; display:inline; top:50%; float:left">
+    <h1>Damos valor ao futuro.</h1>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             setTimeout(function() {
                 const heading = document.querySelector("h1");
-                heading.style.transition = "opacity 300ms";
+                heading.style.transition = "opacity 800ms";
                 heading.style.opacity = "1";
             }, 4000);
-        
         });
         const logo = document.createElement("img");
         logo.src = "./logo_montepio_bco.svg";
         logo.style.position = "absolute";
-        logo.style.width = "50%";
+        logo.style.width = "30%";
         logo.style.top = "50%";
         logo.style.left = "-5%";
         logo.style.transform = "translateY(-50%) translateX(150vw)";

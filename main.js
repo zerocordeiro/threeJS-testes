@@ -9,11 +9,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 const screen_front = {
     width: 1000,
     height: 1000,
-    x: 3.49,
-    y: 2.44,
-    z: 0.49,
-    // y: 3.44,
-    // z: -0.51,
+    x: 3.385,
+    // y: 2.44,
+    // z: 0.49,
+    y: 3.4,
+    z: 1.03,
     rotation: {
         x: 0, y: 0, z: 0
     }
@@ -22,11 +22,11 @@ const screen_front = {
 const screen_left = {
     width: 1000,
     height: 1000,
-    x: 2.99,
-    y: 2.44,
-    z: -0.01,
-    // y: 3.44,
-    // z: -1.01,
+    x: screen_front.x - 0.5,
+    // y: 2.44,
+    // z: -0.01,
+    y: screen_front.y,
+    z: screen_front.z-0.5,
     rotation: {
         x: 0, y: -Math.PI / 2, z: 0
     }
@@ -34,50 +34,64 @@ const screen_left = {
 const screen_right = {
     width: 1000,
     height: 1000,
-    x: 3.99,
-    y: 2.44,
-    z: -0.01,
-    // y: 3.44,
-    // z: -1.01,
+    x: screen_left.x + 1,
+    // y: 2.44,
+    // z: -0.01,
+    y: screen_front.y,
+    z: screen_left.z,
     rotation: {
         x: 0, y: Math.PI / 2, z: 0
     }
 }
 const screen_bottom = {
-    width: 800,
-    height: 800,
-    x: 3.49,
-    y: 1.94,
-    z: -0.01,
+    width: 1000,
+    height: 1000,
+    x: screen_front.x,
+    y: screen_right.y - 0.5,
+    z: screen_left.z,
     rotation: {
         x: Math.PI / 2, y: 0, z: 0
     }
 }
+const largurafrente=1280;
+const larguralado =200
+const alturafrente=64;
+const scale_factor = 100
 const brandingFront = {
-    width: 1025,
-    height: 100,
-    x: -1.135,
-    y: 2.44,
-    z: -0.51,
+    width: largurafrente,
+    height: alturafrente,
+    x: screen_right.x-(largurafrente/scale_factor)/2,
+    y: 3.4-0.5+(alturafrente/scale_factor)/2,
+    z: 1.03-1,
     rotation: {
         x: 0, y: 0, z: 0
     }
 }
 const brandingRight = {
-    width: 200,
-    height: 100,
-    x: 3.99,
-    y: 2.44,
-    z: -1.51,
+    width: larguralado,
+    height: brandingFront.height,
+    x: 3.885,
+    y: brandingFront.y,
+    z: screen_right.z-0.5-(larguralado/scale_factor)/2,
     rotation: {
         x: 0, y: Math.PI / 2, z: 0
     }
 }
 
 // DIMENSIONS - to use mainly in the renderers (we're associating them with a const just in case we want to force the renderers sizes so we don't want to find all relevant instances of window.innerWidth, for example, and change them manually)
+console.log(window.innerWidth);
+// const sizeWindowWidth = 1024;
+// const sizeWindowHeight = 500;
+const sizeWindowWidth = window.innerWidth < 1920 ? window.innerWidth : 1920;
+const sizeWindowHeight = window.innerHeight < 1080 ? window.innerHeight : 1080;
+
+// const sizes = {
+//     width: window.innerWidth,
+//     height:window.innerHeight
+// }
 const sizes = {
-    width: window.innerWidth,
-    height:window.innerHeight
+    width: sizeWindowWidth,
+    height: sizeWindowHeight
 }
 
 //scale will be used to rescale the size of the rendered object and the screen.
@@ -105,6 +119,9 @@ rendererwebgl.setSize( sizes.width, sizes.height); // calling the const defined 
 rendererwebgl.domElement.style.position = 'absolute' // keeps the renderer from being pushed downwards by other DOM html elements on the page
 rendererwebgl.domElement.style.top = 0 // places the renderer at the top of the page
 rendererwebgl.domElement.style.zIndex = 0; // just to make sure the z-index of the WebGL Renderer
+rendererwebgl.domElement.style.top = '50%'; // places the renderer at the top of the page
+rendererwebgl.domElement.style.left = '50%'; // places the renderer at the left of the page
+rendererwebgl.domElement.style.transform = 'translate(-50%, -50%)'; // centers the renderer on the page
 
 //Next do the same for the BG webgl renderer 
 rendererwebglbg.setClearColor(0x010101,0.1)
@@ -112,15 +129,23 @@ rendererwebglbg.setSize( sizes.width, sizes.height);
 rendererwebglbg.domElement.style.position = 'absolute'
 rendererwebglbg.domElement.style.top = 0 
 rendererwebglbg.domElement.style.zIndex = 0;
-
+rendererwebglbg.domElement.style.top = '50%'; // places the renderer at the top of the page
+rendererwebglbg.domElement.style.left = '50%'; // places the renderer at the left of the page
+rendererwebglbg.domElement.style.transform = 'translate(-50%, -50%)'; // centers the renderer on the page
 
 //CSS3d Renderer - basically the same as WebGL renderer
 const renderercss3d = new CSS3DRenderer({canvas:canvas});
 renderercss3d.setSize( sizes.width, sizes.height );
 renderercss3d.domElement.style.position = 'absolute'
+renderercss3d.domElement.style.left = '50%';
+renderercss3d.domElement.style.top = '50%';
+renderercss3d.domElement.style.transform = 'translate(-50%, -50%)';
 const renderercss3dbg = new CSS3DRenderer({canvas:canvas});
 renderercss3dbg.setSize( sizes.width, sizes.height );
 renderercss3dbg.domElement.style.position = 'absolute'
+renderercss3dbg.domElement.style.left = '50%';
+renderercss3dbg.domElement.style.top = '50%';
+renderercss3dbg.domElement.style.transform = 'translate(-50%, -50%)';   
 
 // placing both renderers on the page
 // ORDER IS IMPORTANT, as we want the elements on the CSS3D Renderer to be interactive, so they need to be "on top" of the WebGL ones.
@@ -232,14 +257,14 @@ const wallMaterial = new THREE.MeshBasicMaterial({ map: fachadaTexture });
 wall_01.material = wallMaterial;
 // scenebg.add(wall_01);
 
-const wall_02 = planeBuilder(6, 3, '#efeeef',false)
+const wall_02 = planeBuilder(6, 10, '#efeeef',false)
 wall_02.position.x = -3
 wall_02.position.y = 1.5;
 wall_02.position.z = 0;
 wall_02.rotation.y = Math.PI/2;
 scenebg.add(wall_02);
 
-const wall_03 = planeBuilder(6, 3, '#efeeee',false)
+const wall_03 = planeBuilder(6, 6, '#efeeee',false)
 wall_03.position.x = 4
 wall_03.position.y = 1.5;
 wall_03.position.z = 0;
@@ -252,8 +277,8 @@ floor.position.y=0.0;
 scenebg.add(floor);
 
 const wall_04 = planeBuilder(3, 6, '#ffffff', false);
-wall_04.position.x = 2.5;
-wall_04.position.y = 3;
+wall_04.position.x = 2.4;
+wall_04.position.y = 3.02;
 wall_04.position.z = -1;
 const vizinhoTexture = textureLoader.load('./vizinho.png');
 const wallMaterialVizinho = new THREE.MeshBasicMaterial({ map: vizinhoTexture });
@@ -305,7 +330,8 @@ async function load3D(){
     marquise.scene.scale.set(0.25,0.25,0.25);
     marquise.scene.translateX(-0.63);
     marquise.scene.translateY(0.06);
-    marquise.scene.translateZ(-0.38);
+    marquise.scene.translateZ(-1.38+0.5);
+    marquise.scene.rotation.y = Math.PI;
 } 
 
 await load3D();
@@ -419,8 +445,8 @@ object_front.scale.set(1/screen_front.width,1/screen_front.width)
 object_bottom.scale.set(1/screen_front.width,1/screen_front.width)
 object_left.scale.set(1/screen_front.width,1/screen_front.width)
 object_right.scale.set(1/screen_front.width,1/screen_front.width)
-build_front.scale.set(10.25/brandingFront.width,1/brandingFront.height)
-build_right.scale.set(2/brandingRight.width,1/brandingRight.height)
+build_front.scale.set(1/scale_factor,1/scale_factor)
+build_right.scale.set(1/scale_factor,1/scale_factor)
 
 object_front.position.set( screen_front.x, screen_front.y, screen_front.z );
 object_front.rotateX(screen_front.rotation.x)
@@ -468,7 +494,7 @@ group.scale.set(scale_group, scale_group,scale_group);
 groupbranding.scale.set(scale_group, scale_group,scale_group);
 
 //CAMERA
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000); // the camera is where the "viewer" is. Has the parameters (vertical angle, aspect ratio, min distance for viewing something, maximum distance for viewing something - objects farther away will not be displayed)
+const camera = new THREE.PerspectiveCamera(45, sizes.width / sizes.height, 0.1, 10000); // the camera is where the "viewer" is. Has the parameters (vertical angle, aspect ratio, min distance for viewing something, maximum distance for viewing something - objects farther away will not be displayed)
 // const camerabg = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 10000);
 
 
@@ -477,9 +503,9 @@ scene.add(camera);
 
 
 let camera_initial_position={
-    x: object_front.position.x+2,
-    y: object_front.position.y-1.3,
-    z: object_front.position.z+2.2
+    x: object_front.position.x+4,
+    y: 1.65,
+    z: object_front.position.z+4
 };
 camera.position.set(camera_initial_position.x*scale_group,camera_initial_position.y*scale_group, camera_initial_position.z*scale_group);
 let camerafocus = new THREE.Vector3(object_front.position.x*scale_group,object_front.position.y*scale_group-0.15,object_front.position.z*scale_group-0.2);
@@ -494,13 +520,19 @@ const controls = new OrbitControls(camera, renderercss3d.domElement)
 // const controls = new TrackballControls(camera, renderercss3d.domElement)
 // const controls = new ArcballControls(camera, renderercss3d.domElement)
 controls.movementSpeed = 0.1;
+controls.enablePan = false;
 // console.log(screenhtml.rotation.x);
-const initcontrols={minpolar:Math.PI/2,
-    maxpolar: Math.PI/1.5,
-    minazimuth: -Math.PI/2.1,
-    maxazimuth: Math.PI/2.1,
-    maxdist: 2.3,
-    mindist: 0.5
+const initcontrols={
+    minpolar:Math.PI/1.75,
+    maxpolar: Math.PI/1.75,
+    minazimuth: -Math.PI/5,
+    maxazimuth: Math.PI/5,
+    // minpolar:Math.PI/1.65,
+    // maxpolar: Math.PI/1.65,
+    // minazimuth: -Math.PI/4.6,
+    // maxazimuth: Math.PI/4.6,
+    maxdist: 3,
+    mindist: 0.2
 }
 controls.minPolarAngle = initcontrols.minpolar;
 controls.maxPolarAngle = initcontrols.maxpolar;
